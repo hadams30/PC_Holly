@@ -12,6 +12,7 @@ int piezo3 = 4;
 long duration, cm, inches;
 int counter, spcount;
 int leddelay = 100;
+int scene;
 
 void setup() {
   Serial.begin (9600);
@@ -23,6 +24,7 @@ void setup() {
   pinMode(clockReset, OUTPUT);
   counter=0;
   spcount=0;
+  scene=0;
 }
 
 
@@ -32,33 +34,63 @@ void loop() {
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
+  pinMode(echoPin, INPUT);
   duration = pulseIn(echoPin, HIGH);
   cm = (duration/2) / 29.1;
-  counter=counter+1;
   Serial.print(cm);
-  Serial.print("cm;    ");
-  Serial.print(counter);
-  Serial.print("count");
+  Serial.print("cm");
   Serial.println();
-  delay(100);
+  delay(250);
+  
+      if(cm<=400){
+        spcount=spcount+1;
+        if(spcount>=6){
+           if((cm>300)&&(cm<=400)){
+            scene=1;   
+           }else if((cm>200)&&(cm<=300)){
+            scene=2;   
+           }else if((cm>100)&&(cm<=200)){
+            scene=3;   
+           }else if((cm>=00)&&(cm<=100)){
+            scene=4;   
+           }
+        }
+      }else if(cm>400){
+        spcount=0;
+        servpos=0;
+        scene=0;
+        noTone(piezo3);
+      }
+      
+  if(scene==0){
 
-  if(cm<=400){
-    spcount=spcount+1;
-    if(spcount>=6){
-          if((cm>200)&&(cm<=400)){
-            leddelay=100;
-          }else if((cm>0)&&(cm<=200)){
-            leddelay=10;
-          }
-      myservo.write(servpos);
+  }else if(scene==1){
+      noTone(piezo3);
       digitalWrite(clockpin1,HIGH);
       digitalWrite(clockpin2,HIGH);
       digitalWrite(clockpin1, LOW);
       digitalWrite(clockpin2, LOW);
-      delay(leddelay);
-    }
-  }else if(cm>400){
-    spcount=0;
-    servpos=0;
+      delay(200);
+  }else if(scene==2){
+      noTone(piezo3);
+      digitalWrite(clockpin1,HIGH);
+      digitalWrite(clockpin2,HIGH);
+      digitalWrite(clockpin1, LOW);
+      digitalWrite(clockpin2, LOW);
+      delay(100);
+  }else if(scene==3){
+      noTone(piezo3);
+      digitalWrite(clockpin1,HIGH);
+      digitalWrite(clockpin2,HIGH);
+      digitalWrite(clockpin1, LOW);
+      digitalWrite(clockpin2, LOW);
+      delay(50);
+  }else if(scene==4){
+      //tone(piezo3, 800, 100);
+      digitalWrite(clockpin1,HIGH);
+      digitalWrite(clockpin2,HIGH);
+      digitalWrite(clockpin1, LOW);
+      digitalWrite(clockpin2, LOW);
+      delay(10);
   }
 }//end loop
