@@ -70,8 +70,8 @@ void loop(){
 analogWrite(piezo,150);
 delay(40);
 analogWrite(piezo,0);
-    }else if(distance<=100){
-                  for(int i = 100; i>=50; i=i-12){
+    }else if(distance<=95){
+                  for(int i = 100; i>=50; i=i-26){
                       s2counter=s2counter+1;
                           if(s2counter>=5){
                             for (servpos = 0; servpos <= 20; servpos += 1) {
@@ -101,7 +101,7 @@ analogWrite(piezo,0);
                          delay(17);
                   }
 
-    }else if(distance<=120){
+    }else if(distance<=110){
                   for(int i = 100; i>=10; i=i-7){
                      digitalWrite(clockpin1,HIGH);
                      digitalWrite(clockpin2,HIGH);
